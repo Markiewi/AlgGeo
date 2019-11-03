@@ -6,13 +6,12 @@ import random
 # plot = Plot([PointsCollection([(7, 2), (11, 4), (13, 5), (11, 6), (12, 9), (9, 7), 
 #                               (8, 10), (6, 9), (5, 5), (1, 7), (2, 3)])])
 
-punkty = [((7, 2), 'A'), ((11, 4), 'B'), ((13, 5), 'C'), ((11, 6), 'D'), ((12, 9), 'E'), ((9, 7), 'F'), ((8, 10), 'G'),
-         ((6, 9), 'H'), ((5, 5), 'I'), ((1, 7), 'J'), ((2, 3), 'K'), ((9, 2), 'Aprim'), ((7, 4), 'Abis'), 
-        ((11, 2), 'Aprimprim'), ((7, 6), 'Abisbis')]
+punkty = [(7, 2), (11, 4), (13, 5), (11, 6), (12, 9), (9, 7), (8, 10),
+         (6, 9), (5, 5), (1, 7), (2, 3), (9, 2), (7, 4), (11, 2), (7, 6)]
 # Plot([PointsCollection(testShape)]).draw()
 
 # Wybór p0 ###
-punkty.sort(key=lambda x: (x[0][1], x[0][0]))
+punkty.sort(key=lambda x: (x[1], x[0]))
 p0 = punkty[0]
 # ###
 
@@ -39,7 +38,7 @@ dodatnie_nachylenie = []
 ujemne_nachylenie = []
 
 for punkt in punkty:
-    nachylenie = (nachylenie_do_osi_x(p0[0][0], p0[0][1], punkt[0][0], punkt[0][1]), punkt)
+    nachylenie = (nachylenie_do_osi_x(p0[0], p0[1], punkt[0], punkt[1]), punkt)
     if nachylenie[0] is None: continue
     elif nachylenie[0] == 'X': na_linii_z_x.append(nachylenie)
     elif nachylenie[0] == 'Y': na_linii_z_y.append(nachylenie)
@@ -48,8 +47,8 @@ for punkt in punkty:
 
 na_linii_z_y.sort(key=lambda x: x[1][0], reverse=True)
 na_linii_z_x.sort(key=lambda x: x[1][0], reverse=True)
-dodatnie_nachylenie.sort(key=lambda x: (x[0], x[1][0][0]))
-ujemne_nachylenie.sort(key=lambda x: (x[0], x[1][0][0]))
+dodatnie_nachylenie.sort(key=lambda x: (x[0], x[1][0]))
+ujemne_nachylenie.sort(key=lambda x: (x[0], x[1][0]))
 
 nachylenia = []
 
@@ -85,12 +84,12 @@ stos.append(nachylenia[2])
 while i < len(nachylenia):
     j = len(stos) - 2
     
-    ax = stos[j][0][0]
-    ay = stos[j][0][1]
-    bx = stos[j + 1][0][0]
-    by = stos[j + 1][0][1]
-    cx = nachylenia[i][0][0]
-    cy = nachylenia[i][0][0]
+    ax = stos[j][0]
+    ay = stos[j][1]
+    bx = stos[j + 1][0]
+    by = stos[j + 1][1]
+    cx = nachylenia[i][0]
+    cy = nachylenia[i][1]
     
     wyz = wyznacznik(ax, ay, bx, by, cx, cy)
     if wyz > 0:
@@ -101,3 +100,9 @@ while i < len(nachylenia):
 # ###
 
 print("\nOtoczka: ", stos)
+Plot([PointsCollection(punkty, color = 'blue')]).draw()
+
+for i in range(len(stos)):
+    if i > 0:
+        Plot([PointsCollection([])], [LinesCollection([[stos[i-1],stos[i]]])]).draw()
+Plot([PointsCollection([])], [LinesCollection([[stos[0],stos[len(stos) - 1]]])]).draw()
