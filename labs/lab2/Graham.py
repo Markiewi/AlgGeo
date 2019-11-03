@@ -3,12 +3,16 @@
 import math
 import random
 
-# plot = Plot([PointsCollection([(7, 2), (11, 4), (13, 5), (11, 6), (12, 9), (9, 7), 
-#                               (8, 10), (6, 9), (5, 5), (1, 7), (2, 3)])])
+# punkty = [(7, 2), (11, 4), (13, 5), (11, 6), (12, 9), (9, 7), (8, 10),
+#          (6, 9), (5, 5), (1, 7), (2, 3), (9, 2), (7, 4), (11, 2), (7, 6)]
 
-punkty = [(7, 2), (11, 4), (13, 5), (11, 6), (12, 9), (9, 7), (8, 10),
-         (6, 9), (5, 5), (1, 7), (2, 3), (9, 2), (7, 4), (11, 2), (7, 6)]
-# Plot([PointsCollection(testShape)]).draw()
+def genPoints(l, r, n):
+    points = []
+    for x in range(n):
+        points.append((random.randint(l,r), random.randint(l,r)))
+    return points
+    
+punkty = genPoints(0, 1000, 100)
 
 # Wybór p0 ###
 punkty.sort(key=lambda x: (x[1], x[0]))
@@ -60,7 +64,7 @@ for punkt in dodatnie_nachylenie:
     else:
         nachylenia.append(tmp[len(tmp) - 1][1])
         tmp.append(punkt)
-nachylenia.append(tmp[len(tmp) - 1][1])
+if tmp != []: nachylenia.append(tmp[len(tmp) - 1][1])
         
 if na_linii_z_x != []: nachylenia.append(na_linii_z_x[0][1])
 tmp = []
@@ -70,7 +74,7 @@ for punkt in ujemne_nachylenie:
     else:
         nachylenia.append(tmp[len(tmp) - 1][1])
         tmp.append(punkt)
-nachylenia.append(tmp[len(tmp) - 1][1])
+if tmp != []:nachylenia.append(tmp[len(tmp) - 1][1])
 nachylenia.insert(0, p0)
 # ###
 
