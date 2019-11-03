@@ -1,0 +1,2 @@
+Dla małej precyzji praktycznie nie ma różnicy między sposobami liczenia
+wyznaczników. Dla dużej precyzji wyznacznik 2 jest dokładniejszy.
