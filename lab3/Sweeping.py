@@ -13,11 +13,12 @@ def Sweeping(line_segments):
         event = broom.heap_take_min()
         broom.x = event.point.x
 
-        if event.state == 0:
+        if event.state == 0:  # event is starting point of the line segment
             broom.root_insert(event.segment)
 
             tree_node = broom.root.find(event.segment)
 
+            # for the added line checking if it has intersections with its neighbours, if so add new intersection
             if tree_node.top is not None:
                 intersection = tree_node.segment.check_for_intersection(tree_node.top.segment)
                 if intersection is not None:
@@ -29,7 +30,7 @@ def Sweeping(line_segments):
                     broom.heap_insert_intersection(intersection, tree_node.segment, tree_node.bottom.segment)
                     broom.intersections.append(intersection)
 
-        elif event.state == 1:
+        elif event.state == 1:  # event is the ending point of the line segment
             tree_node = broom.root.find(event.segment)
             if tree_node.top is not None and tree_node.bottom is not None:
                 top = tree_node.top
@@ -40,6 +41,7 @@ def Sweeping(line_segments):
 
             broom.root_delete(event.segment)
 
+            # if the deleted line segment had both top and bottom neighbours check if the they have intersection
             if top is not None and bottom is not None:
                 intersection = top.segment.check_for_intersection(bottom.segment)
 
@@ -47,12 +49,15 @@ def Sweeping(line_segments):
                     broom.heap_insert_intersection(intersection, top.segment, bottom.segment)
                     broom.intersections.append(intersection)
 
-        else:
+        else:  # event is the point of intersection of two line segments
             broom.root_intersection(event.segment, event.optional_segment)
 
             s1 = broom.root.find(event.segment)
             s2 = broom.root.find(event.optional_segment)
 
+            # for the swapped line segments check respectively for the new top (top in regard to the two swapped lines)
+            # if it has intersection with its top neighbour (if one exists)
+            # and for the new bottom if it has intersection with ts bottom neighbour (if one exists)
             if s1.top == s2:
                 if s1.bottom is not None:
                     intersection = s1.segment.check_for_intersection(s1.bottom.segment)

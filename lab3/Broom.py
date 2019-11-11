@@ -3,6 +3,10 @@ from HeapNode import *
 from heapq import heappush, heappop
 
 
+# our broom with three structures and x coordinate which is used to track the position of the broom
+# the root (T) is used to keep current state of the broom (meaning the line segments it crosses on x coordinate)
+# the heap (Q) is used to hold point of all of the events left in a sorted manner
+# the intersection (A) is to hold all intersection points we have found (the structure we return after the algorithm)
 class Broom:
     def __init__(self):
         self.x = 0

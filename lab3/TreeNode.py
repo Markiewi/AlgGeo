@@ -1,3 +1,11 @@
+# the nodes of the broom's structure root, each node holds 7 attributes
+# segment - line segment so we know where is lies in the top - bottom order
+# key - simply coordinate y of the first point of the line segment
+# top - the top neighbour of the line segment in the current position of the broom
+# bottom - same as top but it's the bottom neighbour
+# and three regular attributes of binary search tree - left, right and parent
+
+
 class TreeNode:
     def __init__(self, segment):
         self.segment = segment
@@ -7,6 +15,21 @@ class TreeNode:
         self.left = None
         self.right = None
         self.parent = None
+
+    def __repr__(self):
+        if self is None:
+            return 'None'
+
+        if self.top is not None:
+            t = ' top: ' + str(self.top.segment)
+        else:
+            t = ' top: None'
+        if self.bottom is not None:
+            b = ' bottom: ' + str(self.bottom.segment)
+        else:
+            b = ' bottom: None'
+
+        return 'Segment: ' + str(self.segment) + t + b
 
     def delete(self, segment):
         node = self.find(segment)
@@ -72,21 +95,6 @@ class TreeNode:
         node2.bottom = node1.bottom
         node1.bottom = node2
         node2.top = node1
-
-    def __repr__(self):
-        if self is None:
-            return 'None'
-
-        if self.top is not None:
-            t = ' top: ' + str(self.top.segment)
-        else:
-            t = ' top: None'
-        if self.bottom is not None:
-            b = ' bottom: ' + str(self.bottom.segment)
-        else:
-            b = ' bottom: None'
-
-        return 'Segment: ' + str(self.segment) + t + b
 
     def insert(self, segment, x):
         key = segment.p.y

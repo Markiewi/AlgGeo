@@ -1,3 +1,9 @@
+# for checking if the premises of the sweeping algorithm are met
+# 1. No vertical line segments (no line segments with the same direction as the broom)
+# 2. Two line segments must meet at one point maximum (no parallel line segments that overlap)
+# 3. Each intersection must of exactly two line segments (no three or more line segments can go through one point)
+
+
 def vertical_check(line_segments):  # O(n), n - number of line segments
     for line_segment in line_segments:
         if line_segment.calculate_slope() is None:

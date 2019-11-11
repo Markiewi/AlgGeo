@@ -1,3 +1,6 @@
+# regular line segment with two points as reference and some useful methods
+
+
 class LineSegment(object):
     def __init__(self, p, q):
         if p == q:
@@ -79,6 +82,7 @@ class LineSegment(object):
             return None
 
 
+# regular point with x and y coordinate along with some useful methods
 class Point(object):
     def __init__(self, x, y, name=None):
         self.x = x
