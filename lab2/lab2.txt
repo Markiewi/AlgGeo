@@ -1,0 +1,11 @@
+Program działał dla wszystkich testowanych zbiorow.
+Zbiory z prostokątem sprawdzają zachowanie jeżeli jest dużo punktów na jednej prostej,
+takie zbiory dawały najwięcej trudności w działaniu.
+
+Zbiory na okręgu świetnie ilustrują różnice w złożoności między algorytmami,
+gdzie Jarvis jest wyjątkowo powolny
+
+Algorytm Grahama jest zdecydowanie szybszy dla wszystkich zbiorów,
+szczególnie dla zbioru typu C (okregu),
+dla którego algorytm Jarvisa zajmuje wyjatkowo dużo czasu,
+co jest konsekwencją jego złożoności
