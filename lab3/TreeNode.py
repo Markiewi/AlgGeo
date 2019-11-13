@@ -138,6 +138,12 @@ class TreeNode:
             while pred.top is not None and pred.top.current_height(x) < height:
                 pred = pred.top
 
+        succ_height = succ.current_height(x) if succ is not None else None
+        pred_height = pred.current_height(x) if pred is not None else None
+
+        succ = None if succ is not None and succ_height < height else succ
+        pred = None if pred is not None and pred_height > height else pred
+
         if succ is not None:
             self.top = succ
             succ.bottom = self
@@ -206,11 +212,11 @@ class TreeNode:
         if self.left is not None:
             self.left.check_parents()
         if self.parent is None:
-            print('root')
+            print('root: ', self.parent)
         else:
             if self.parent.left == self:
-                print('lewe dziecko')
+                print('lewe dziecko: ', self.parent)
             elif self.parent.right == self:
-                print('prawe dziecko')
+                print('prawe dziecko: ', self.parent)
         if self.right is not None:
             self.right.check_parents()

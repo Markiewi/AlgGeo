@@ -1,5 +1,6 @@
 from LineSegment import *
 from Broom import *
+import random
 
 
 def Sweeping(line_segments):
@@ -91,8 +92,8 @@ def Sweeping(line_segments):
     return broom.intersections
 
 
-p = [(0, 2, 'A'), (8, 2, 'B'), (3, 3, 'C'), (7, 7, 'D'), (5, 8, 'E'), (7, 1, 'F'),
-     (5, 1, 'G'), (9, 6, 'H'), (3, 4, 'I'), (10, 4, 'J'), (1, 1, 'K'), (8, 3, 'L')]
+p = [(2, 12, 'A'), (24, 4, 'B'), (4, 2, 'C'), (26, 12, 'D'), (6, 8, 'E'), (7, 6, 'F'),
+     (16, 12, 'G'), (18, 4, 'H'), (18, 14, 'I'), (22, 2, 'J'), (8, 5, 'K'), (10, 7, 'L')]
 points = Point.add_multiple_points(p)
 # print(points)
 
@@ -100,5 +101,5 @@ ls = LineSegment.add_multiple_line_segments(points)
 print(ls)
 intersections = Sweeping(ls)
 print(len(intersections))
-for inter in intersections:
+for inter in intersections:`
     print(inter)

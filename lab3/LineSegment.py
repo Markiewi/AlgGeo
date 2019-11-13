@@ -104,3 +104,8 @@ class Point(object):
             else:
                 new_points.append(Point(point[0], point[1]))
         return new_points
+
+    def round_up(self, epsilon):
+        self.x = round(self.x, epsilon)
+        self.y = round(self.y, epsilon)
+        return self

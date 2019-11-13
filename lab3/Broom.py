@@ -8,6 +8,8 @@ from heapq import heappush, heappop
 # the heap (Q) is used to hold point of all of the events left in a sorted manner
 # the intersection (A) is to hold all intersection points we have found (the structure we return after the algorithm)
 class Broom:
+    epsilon = 14  # number of i round up to in float
+
     def __init__(self):
         self.x = 0
         self.root = None
@@ -15,15 +17,18 @@ class Broom:
         self.intersections = []
 
     def intersections_insert(self, point):
+        point.round_up(self.epsilon)
         self.intersections.append(point)
 
     def intersections_check_if_already_in(self, point):
+        point.round_up(self.epsilon)
         for p in self.intersections:
             if p.x == point.x and p.y == point.y:
                 return True
         return False
 
     def heap_insert_point(self, point, segment):
+        point.round_up(self.epsilon)
         if segment.p == point:
             state = 0
         else:
@@ -36,6 +41,7 @@ class Broom:
         heappush(self.heap, node)
 
     def heap_insert_intersection(self, point, segment1, segment2):
+        point.round_up(self.epsilon)
         if self.heap is None:
             self.heap = []
 
