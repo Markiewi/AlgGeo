@@ -70,6 +70,9 @@ class LineSegment:
         return (b2 - b1) / (a1 - a2)
 
     def check_for_intersection(self, segment):
+        if self is None or segment is None:
+            return None
+
         x = self.x_of_intersection(segment)
         if x is None:
             return None
@@ -80,6 +83,15 @@ class LineSegment:
             return Point(x, y)
         else:
             return None
+
+    def update_key(self, x, epsilon):
+        return round(self.calculate_slope() * x + self.calculate_y_intersect(), epsilon)
+
+    def round_segment(self, epsilon):
+        self.p = self.p.round_up(epsilon)
+        self.q = self.q.round_up(epsilon)
+        self.key = round(self.key, epsilon)
+        return self
 
 
 # regular point with x and y coordinate along with some useful methods
@@ -109,3 +121,9 @@ class Point(object):
         self.x = round(self.x, epsilon)
         self.y = round(self.y, epsilon)
         return self
+
+    def not_in_array(self, points):
+        for point in points:
+            if self.x == point.x and self.y == point.y:
+                return False
+        return True

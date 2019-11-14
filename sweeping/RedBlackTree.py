@@ -107,6 +107,8 @@ class RedBlackTree:
         if node_to_remove.get_children_count() == 2:
             successor = self._find_in_order_successor(node_to_remove)
             node_to_remove.key = successor.key
+            node_to_remove.segment = successor.segment
+            node_to_remove.bottom_segment = successor.bottom_segment
             node_to_remove = successor
 
         self._delete(node_to_remove)
@@ -399,6 +401,7 @@ class RedBlackTree:
             grandfather.color = RED
         self._try_rebalance(grandfather)
 
+    # epsilon
     def find_node(self, key):
         def inner_find(root):
             if root is None or root == self.NIL_LEAF:
@@ -449,6 +452,7 @@ class RedBlackTree:
         last_found_val = None if self.root.key < key else self.root.key
 
         def find_ceil(node):
+            print('node: ', node)
             nonlocal last_found_val
             if node == self.NIL_LEAF:
                 return None
@@ -498,3 +502,35 @@ class RedBlackTree:
             print('None')
             return
         self.root.in_order()
+
+    def _find_min(self, node):
+        while node.left != self.NIL_LEAF:
+            node = node.left
+        return node
+
+    def _find_max(self, node):
+        while node.right != self.NIL_LEAF:
+            node = node.right
+        return node
+
+    def successor(self, node):
+        if node.right is not self.NIL_LEAF:
+            return self._find_min(node.right)
+        parent = node.parent
+        while parent is not None:
+            if node != parent.right:
+                break
+            node = parent
+            parent = parent.parent
+        return parent
+
+    def predecessor(self, node):
+        if node.left is not self.NIL_LEAF:
+            return self._find_max(node.left)
+        parent = node.parent
+        while parent is not None:
+            if node != parent.left:
+                break
+            node = parent
+            parent = parent.parent
+        return parent
