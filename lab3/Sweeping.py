@@ -92,14 +92,16 @@ def Sweeping(line_segments):
     return broom.intersections
 
 
-p = [(2, 12, 'A'), (24, 4, 'B'), (4, 2, 'C'), (26, 12, 'D'), (6, 8, 'E'), (7, 6, 'F'),
+p1 = [(2, 12, 'A'), (24, 4, 'B'), (4, 2, 'C'), (26, 12, 'D'), (6, 8, 'E'), (7, 6, 'F'),
      (16, 12, 'G'), (18, 4, 'H'), (18, 14, 'I'), (22, 2, 'J'), (8, 5, 'K'), (10, 7, 'L')]
-points = Point.add_multiple_points(p)
+p2 = [(1, 5, 'A'), (100, 10, 'B'), (1, 4, 'C'), (100, 11, 'D'), (1, 3, 'E'),
+      (100, 100, 'F'), (1, 2, 'G'), (100, 110, 'H')]
+points = Point.add_multiple_points(p2)
 # print(points)
 
 ls = LineSegment.add_multiple_line_segments(points)
 print(ls)
 intersections = Sweeping(ls)
 print(len(intersections))
-for inter in intersections:`
+for inter in intersections:
     print(inter)
