@@ -84,8 +84,10 @@ class LineSegment:
         else:
             return None
 
-    def update_key(self, x, epsilon):
-        return round(self.calculate_slope() * x + self.calculate_y_intersect(), epsilon)
+    def update_key(self, x):
+        a = self.calculate_slope()
+        b = self.calculate_y_intersect()
+        return a * x + b
 
     def round_segment(self, epsilon):
         self.p = self.p.round_up(epsilon)
@@ -95,7 +97,7 @@ class LineSegment:
 
 
 # regular point with x and y coordinate along with some useful methods
-class Point(object):
+class Point:
     def __init__(self, x, y, name=None):
         self.x = x
         self.y = y

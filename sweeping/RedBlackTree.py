@@ -4,6 +4,8 @@ NIL = 'NIL'
 
 
 class TreeNode:
+    epsilon = 10 ** (-12)
+
     def __init__(self, segment, color, parent, left=None, right=None, bottom_segment=None):
         self.key = segment.key if segment is not None else None
         self.segment = segment
@@ -37,12 +39,15 @@ class TreeNode:
     def __eq__(self, other):
         if self.color == NIL and self.color == other.color:
             return True
-
         if self.parent is None or other.parent is None:
             parents_are_same = self.parent is None and other.parent is None
         else:
-            parents_are_same = self.parent.key == other.parent.key and self.parent.color == other.parent.color
-        return self.key == other.key and self.color == other.color and parents_are_same
+            parents_are_same = abs(self.parent.key - other.parent.key) < self.epsilon \
+                               and self.parent.color == other.parent.color
+            # parents_are_same = self.parent.key == other.parent.key and self.parent.color == other.parent.color
+        # print(self, '\n' , other)
+        return (other.key is not None or (other.key is None and self.key is None)) \
+               and abs(self.key - other.key) < self.epsilon and self.color == other.color and parents_are_same
 
     def has_children(self) -> bool:
         return bool(self.get_children_count())
@@ -62,6 +67,7 @@ class TreeNode:
 
 class RedBlackTree:
     NIL_LEAF = TreeNode(segment=None, color=NIL, parent=None)
+    epsilon = 10 ** (-12)
 
     def __init__(self):
         self.count = 0
@@ -71,7 +77,7 @@ class RedBlackTree:
             'R': self._left_rotation
         }
 
-    def insert(self, segment, bottom_segment=None):
+    def insert(self, segment, bottom_segment=None, x=None):
         key = segment.key
 
         if not self.root:
@@ -79,7 +85,7 @@ class RedBlackTree:
                                  right=self.NIL_LEAF, bottom_segment=bottom_segment)
             self.count += 1
             return
-        parent, node_dir = self._find_parent(key)
+        parent, node_dir = self._find_parent(key, x)
         if node_dir is None:
             return
         new_node = TreeNode(segment=segment, color=RED, parent=parent, left=self.NIL_LEAF,
@@ -92,9 +98,9 @@ class RedBlackTree:
         self._try_rebalance(new_node)
         self.count += 1
 
-    def delete(self, segment):
+    def delete(self, segment, x=None):
         key = segment.key
-        node_to_remove = self.find_node(key)
+        node_to_remove = self.find_node(key, x)
         if node_to_remove.bottom_segment is not None:
             if node_to_remove.bottom_segment != segment:
                 node_to_remove.segment = node_to_remove.bottom_segment
@@ -379,9 +385,16 @@ class RedBlackTree:
             node.color = RED
             grandfather.color = RED
 
-    def _find_parent(self, key):
+    def _find_parent(self, key, x=None):
         def inner_find(parent):
-            if key == parent.key:
+            # if key == parent.key:
+
+            parent.segment.key = parent.segment.update_key(x)
+            parent.key = parent.segment.key
+            if parent.bottom_segment is not None:
+                parent.bottom_segment.key = parent.bottom_segment.update_key(x)
+
+            if abs(key - parent.key) < self.epsilon:
                 return None, None
             elif key > parent.key:
                 if parent.right.color == NIL:
@@ -401,17 +414,22 @@ class RedBlackTree:
             grandfather.color = RED
         self._try_rebalance(grandfather)
 
-    # epsilon
-    def find_node(self, key):
+    def find_node(self, key, x=None):
         def inner_find(root):
             if root is None or root == self.NIL_LEAF:
                 return None
-            if key > root.key:
-                return inner_find(root.right)
-            elif key < root.key:
-                return inner_find(root.left)
-            else:
+            if abs(key - root.key) < self.epsilon:
                 return root
+            else:
+                root.segment.key = root.segment.update_key(x)
+                root.key = root.segment.key
+                if root.bottom_segment is not None:
+                    root.bottom_segment.key = root.key
+
+                if key > root.key:
+                    return inner_find(root.right)
+                elif key < root.key:
+                    return inner_find(root.left)
 
         found_node = inner_find(self.root)
         return found_node
@@ -456,7 +474,8 @@ class RedBlackTree:
             nonlocal last_found_val
             if node == self.NIL_LEAF:
                 return None
-            if node.key == key:
+            # if node.key == key:
+            if abs(node.key - key) < self.epsilon:
                 last_found_val = node.key
                 return node.key
             elif node.key < key:
@@ -483,7 +502,8 @@ class RedBlackTree:
             nonlocal last_found_val
             if node == self.NIL_LEAF:
                 return None
-            if node.key == key:
+            # if node.key == key:
+            if abs(node.key - key) < self.epsilon:
                 last_found_val = node.key
                 return node.key
             elif node.key < key:
