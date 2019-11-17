@@ -44,10 +44,8 @@ class TreeNode:
         else:
             parents_are_same = abs(self.parent.key - other.parent.key) < self.epsilon \
                                and self.parent.color == other.parent.color
-            # parents_are_same = self.parent.key == other.parent.key and self.parent.color == other.parent.color
-        # print(self, '\n' , other)
-        return (other.key is not None or (other.key is None and self.key is None)) \
-               and abs(self.key - other.key) < self.epsilon and self.color == other.color and parents_are_same
+        return (other.key is not None or (other.key is None and self.key is None)) and \
+            abs(self.key - other.key) < self.epsilon and self.color == other.color and parents_are_same
 
     def has_children(self) -> bool:
         return bool(self.get_children_count())
@@ -387,12 +385,11 @@ class RedBlackTree:
 
     def _find_parent(self, key, x=None):
         def inner_find(parent):
-            # if key == parent.key:
-
-            parent.segment.key = parent.segment.update_key(x)
-            parent.key = parent.segment.key
-            if parent.bottom_segment is not None:
-                parent.bottom_segment.key = parent.bottom_segment.update_key(x)
+            if x is not None:
+                parent.segment.key = parent.segment.update_key(x)
+                parent.key = parent.segment.key
+                if parent.bottom_segment is not None:
+                    parent.bottom_segment.key = parent.bottom_segment.update_key(x)
 
             if abs(key - parent.key) < self.epsilon:
                 return None, None
@@ -421,10 +418,11 @@ class RedBlackTree:
             if abs(key - root.key) < self.epsilon:
                 return root
             else:
-                root.segment.key = root.segment.update_key(x)
-                root.key = root.segment.key
-                if root.bottom_segment is not None:
-                    root.bottom_segment.key = root.key
+                if x is not None:
+                    root.segment.key = root.segment.update_key(x)
+                    root.key = root.segment.key
+                    if root.bottom_segment is not None:
+                        root.bottom_segment.key = root.key
 
                 if key > root.key:
                     return inner_find(root.right)
@@ -460,62 +458,6 @@ class RedBlackTree:
             sibling = parent.right
             direction = 'R'
         return sibling, direction
-
-    def ceil(self, key) -> int or None:
-        """
-        Given a key, return the closest key that is equal or bigger than it,
-        returning None when no such exists
-        """
-        if self.root is None: return None
-        last_found_val = None if self.root.key < key else self.root.key
-
-        def find_ceil(node):
-            print('node: ', node)
-            nonlocal last_found_val
-            if node == self.NIL_LEAF:
-                return None
-            # if node.key == key:
-            if abs(node.key - key) < self.epsilon:
-                last_found_val = node.key
-                return node.key
-            elif node.key < key:
-                # go right
-                return find_ceil(node.right)
-            else:
-                # this node is bigger, save its key and go left
-                last_found_val = node.key
-
-                return find_ceil(node.left)
-
-        find_ceil(self.root)
-        return last_found_val
-
-    def floor(self, key) -> int or None:
-        """
-        Given a key, return the closest key that is equal or less than it,
-        returning None when no such exists
-        """
-        if self.root is None: return None
-        last_found_val = None if self.root.key > key else self.root.key
-
-        def find_floor(node):
-            nonlocal last_found_val
-            if node == self.NIL_LEAF:
-                return None
-            # if node.key == key:
-            if abs(node.key - key) < self.epsilon:
-                last_found_val = node.key
-                return node.key
-            elif node.key < key:
-                # this node is smaller, save its key and go right, trying to find a cloer one
-                last_found_val = node.key
-
-                return find_floor(node.right)
-            else:
-                return find_floor(node.left)
-
-        find_floor(self.root)
-        return last_found_val
 
     def in_order(self):
         if self.root is None:

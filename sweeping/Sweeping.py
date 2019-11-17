@@ -11,7 +11,6 @@ def sweeping(line_segments):
 
     while len(broom.heap) > 0:
         event = broom.heap_take_min()
-        # print(event)
         broom.x = event.point.x
 
         if event.state == 0:
@@ -32,16 +31,8 @@ def sweeping(line_segments):
             top = broom.root_successor(event.segment)
             bottom = broom.root_predecessor(event.segment)
 
-            intersection = event.segment.check_for_intersection(top)
-            if intersection is not None:
-                # print('First')
-                broom.intersections.append(intersection)
-                broom.heap_insert_intersection(intersection, top, event.segment)
-            intersection = event.segment.check_for_intersection(bottom)
-            if intersection is not None:
-                # print('Second')
-                broom.intersections.append(intersection)
-                broom.heap_insert_intersection(intersection, event.segment, bottom)
+            broom.intersections_insert(event.segment.check_for_intersection(top), top, event.segment)
+            broom.intersections_insert(event.segment.check_for_intersection(bottom), event.segment, bottom)
 
         elif event.state == 2:  # intersection
             broom.root_delete(event.segment)
@@ -55,18 +46,8 @@ def sweeping(line_segments):
             top = broom.root_successor(event.bottom_segment)
             bottom = broom.root_predecessor(event.segment)
 
-            intersection = event.bottom_segment.check_for_intersection(top)
-            if intersection is not None:
-                if intersection.not_in_array(broom.intersections):
-                    # print('Third')
-                    broom.intersections.append(intersection)
-                    broom.heap_insert_intersection(intersection, top, event.bottom_segment)
-            intersection = event.segment.check_for_intersection(bottom)
-            if intersection is not None:
-                if intersection.not_in_array(broom.intersections):
-                    # print('Fourth')
-                    broom.intersections.append(intersection)
-                    broom.heap_insert_intersection(intersection, event.segment, bottom)
+            broom.intersections_insert(event.bottom_segment.check_for_intersection(top), top, event.bottom_segment)
+            broom.intersections_insert(event.segment.check_for_intersection(bottom), event.segment, bottom)
 
         else:
             same_key_node = broom.root_find(event.segment)
@@ -79,59 +60,30 @@ def sweeping(line_segments):
 
                 broom.root_delete(same_key_node.segment)
 
-                if top is not None:
-                    intersection = top.check_for_intersection(bottom)
-                else:
-                    intersection = None
+                broom.intersections_insert(top.check_for_intersection(bottom) if top is not None else None, top, bottom)
 
-                if intersection is not None:
-                    if intersection.not_in_array(broom.intersections):
-                        # print('Fifth')
-                        broom.intersections.append(intersection)
-                        broom.heap_insert_intersection(intersection, top, bottom)
             else:
                 if event.segment == same_key_node.segment:
                     broom.root_delete(same_key_node.segment)
                     top = broom.root_successor(same_key_node.bottom_segment)
 
-                    intersection = same_key_node.bottom_segment.check_for_intersection(top)
-                    if intersection is not None:
-                        if intersection.not_in_array(broom.intersections):
-                            # print('Sixth')
-                            broom.intersections.append(intersection)
-                            broom.heap_insert_intersection(intersection, top, same_key_node.bottom_segment)
+                    broom.intersections_insert(same_key_node.bottom_segment.check_for_intersection(top),
+                                               top, same_key_node.bottom_segment)
+
                 elif event.segment == same_key_node.bottom_segment:
                     broom.root_delete(same_key_node.bottom_segment)
                     bottom = broom.root_predecessor(same_key_node.segment)
 
-                    intersection = same_key_node.segment.check_for_intersection(bottom)
-                    if intersection is not None:
-                        if intersection.not_in_array(broom.intersections):
-                            # print('Seventh')
-                            broom.intersections.append(intersection)
-                            broom.heap_insert_intersection(intersection, same_key_node.segment, bottom)
-
-        # print(broom.heap)
-        # print(broom.intersections)
-        # broom.root_in_order()
-        # print()
-    return broom.intersections
+                    broom.intersections_insert(same_key_node.segment.check_for_intersection(bottom),
+                                               same_key_node.segment, bottom)
+    return broom.intersections_array
 
 
 p = [(1, 5, 'A'), (90, 30, 'B'), (10, 25, 'C'), (110, 20, 'D'), (15, 15, 'E'),
      (31, 23, 'F'), (30, 21, 'G'), (35, 18, 'H'), (70, 30, 'I'), (85, 8, 'J'),
      (80, 35, 'K'), (90, 8, 'L'), (30.5, 23, 'M'), (31, 22, 'N')]
 points = Point.add_multiple_points(p)
-# print(points)
 
 ls = LineSegment.add_multiple_line_segments(points)
 print(ls)
 print(sweeping(ls))
-# b = Broom()
-# b.root_insert(ls[0])
-# b.root_insert(ls[1])
-# b.root_insert(ls[2])
-# b.root_in_order()
-# print()
-# b.root_delete(ls[2])
-# b.root_in_order()

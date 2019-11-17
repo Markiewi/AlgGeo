@@ -118,14 +118,3 @@ class Point:
             else:
                 new_points.append(Point(point[0], point[1]))
         return new_points
-
-    def round_up(self, epsilon):
-        self.x = round(self.x, epsilon)
-        self.y = round(self.y, epsilon)
-        return self
-
-    def not_in_array(self, points):
-        for point in points:
-            if self.x == point.x and self.y == point.y:
-                return False
-        return True

@@ -1,6 +1,7 @@
 from RedBlackTree import *
 from Heap import *
 from heapq import heappush, heappop
+from DuplicateRedBlackTree import *
 
 
 class Broom:
@@ -10,19 +11,23 @@ class Broom:
         self.x = 0
         self.rb_tree = None
         self.heap = None
-        self.intersections = []
+        self.intersections_tree = None
+        self.intersections_array = []
 
-    def intersections_insert(self, point):
-        for intersection in self.intersections:
-            if abs(point.x - intersection.x) < self.epsilon and abs(point.y - intersection.y) < self.epsilon:
-                return
-        self.intersections.append(point)
+    def intersections_insert(self, point, segment1, segment2):
+        if self.intersections_tree is None:
+            self.intersections_tree = DuplicateRedBlackTree()
 
-    def intersections_check_if_already_in(self, point):
-        for p in self.intersections:
-            if p.x == point.x and p.y == point.y:
-                return True
-        return False
+        if point is not None and self.intersections_tree.find_node(point) is None:
+            self.intersections_tree.insert(point)
+            self.heap_insert_intersection(point, segment1, segment2)
+            self.intersections_array.append(point)
+
+    def intersections_in_order(self):
+        self.intersections_tree.in_order()
+
+    def intersections_find(self, point):
+        return self.intersections_tree.find_node(point)
 
     def heap_insert_point(self, point, segment):
         if segment.p == point:
@@ -63,7 +68,6 @@ class Broom:
         return self.rb_tree.find_node(segment.key, x=self.x)
 
     def root_successor(self, segment):
-        # print('Segment: ', segment)
         curr_node = self.rb_tree.find_node(segment.key, x=self.x)
         if curr_node.bottom_segment is not None and curr_node.bottom_segment == segment:
             return curr_node.segment
@@ -74,8 +78,6 @@ class Broom:
             return succ_node.bottom_segment if succ_node.bottom_segment is not None else succ_node.segment
 
     def root_predecessor(self, segment):
-        # self.root_in_order()
-        # print(segment.key)
         curr_node = self.rb_tree.find_node(segment.key, x=self.x)
         if curr_node.bottom_segment is not None and curr_node.segment == segment:
             return curr_node.bottom_segment
