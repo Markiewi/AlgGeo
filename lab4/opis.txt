@@ -1,0 +1,18 @@
+2. Dzielę wszystkie punkty na pięć stanów tak jak zostało to podane na wykładzie, 
+następnie przeglądam czy istnieje punkt o stanie 'łączący' lub 'dzielący', 
+jeżeli taki istnieje wielokąt nie jest y-monotoniczny.
+
+Wielokąt przechowuje jako listę odpowiednio posortowanych punktów,
+to znaczy tworzące po kolei boki wielokąta idąc przeciwnie do wskazówek
+zegara zaczynając od wierzchołka 'start' czyli o najwyższej współrzędnej y.
+
+Triangulacje przechowuje w strukturze z biblioteki pythona 'set' czyli 
+nieuporządkowanej kolekcji unikalnych elementów, każdy element mojej kolekcji
+zawiera jedną krawędź końcowego wyniku triangulacji (łącznie z początkowymi
+krawędziami wielokątu).
+Zarówno lewy jak i prawy łańcuch są przechowywane w tej samej strukturze dla
+szybkiej możliwości sprawdzenia do którego łańcucha należy dany punkt.
+
+Struktura przechowująca wielokąt umożliwia wygodne wyznaczenie łańuchów jak i
+posortowanie względem współrzędnej y.
+Struktura przechowująca triangulację umożliwia szybki wkładanie elementów.

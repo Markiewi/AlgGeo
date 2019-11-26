@@ -1,0 +1,27 @@
+Struktura stanu miotły (T) ma cztery parametry:
+    a) line_segment - czyli po prostu odcinek
+    b) start - punkt początkowy odcinka (względem współrzędnej x)
+    c) end - punkt końcowy końcowy odcinka (względem współrzędnej x)
+    d) orient_point - punkt orientacyjny oraz najważniejszy atrybut struktury, jest on początkowo
+            ustawiony na punkt początkowy odcinka (czyli x miotły), i zostaje aktualizowany gdy
+            wydarzenie będzie przecięciem tego odcinka z jakimś innym wtedy tym punktem zostaje
+            punkt o współrzędnej x miotły a y odpowidnio na wysokości odcinka. Za pomocą wyznacznika
+            według tego punktu jest prowadzona orientacja "większe-mniejsze" czyli sortowanie
+            (metoda __lt__)
+
+Struktura zdarzeń (Q) posiada dwie możliwości:
+    1) Event - jest to zdarzenie początku lub końca odcinka oraz posiada trzy parametry:
+        a) punkt - po prostu punkt w którym to zdarzenie występuje
+        b) line_segments - odcinek do jakiego owy punkt należy
+        c) event_type - czy jest początek czy koniec
+    2) Intersection - zdarzenie przecięcia dwóch odcinków:
+        Różni się on tym, że line_segments zawiera dwa odcinki nie jeden (te które się w punkcie
+        przecieły), event_type jest ustawiony na przecięcie, no i dla łatwiejszego dostępu ma dwa nowe
+        pola segment1 oraz segment2 (odcinki przecięć)
+
+        Sortuje się względem odpowiednio wartości:
+            a) współrzędnej x
+            b) współrzędnej y
+            c) stanu (początek - 1, koniec - 3, przecięcie - 2)
+
+Te struktury dzięki funkcji hash są trzymane w drzewie czerwono czarnym co daje zadowalającą złożoność.
